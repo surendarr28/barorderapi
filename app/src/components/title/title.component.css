@@ -1,0 +1,17 @@
+.title-cont {
+    font-family: 'Gamja Flower', cursive;
+    /* font-family: 'Pacifico', cursive;
+    font-family: 'Shadows Into Light', cursive;
+    font-family: 'Bree Serif', serif;
+    font-family: 'Gloria Hallelujah', cursive;
+    font-family: 'Permanent Marker', cursive;
+    font-family: 'Merienda', cursive;
+    font-family: 'Patrick Hand', cursive; */
+    display: block;
+    text-align: center;
+    font-size: 50px;
+    color: #ed3c63;
+    top: 100px;
+    position: relative;
+    transition: 2s all;
+}
