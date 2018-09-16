@@ -18,9 +18,10 @@ app.get('/check', function (req, ress) {
 
     client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
         if (err) throw err;
-        for (let row of res.rows) {
-            ress.send(row);
-        }
+        // for (let row of res.rows) {
+           
+        // }
+        return ress.send(res.rows);
         client.end();
     });
 
