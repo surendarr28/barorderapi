@@ -14,9 +14,9 @@ client.connect();
 app.use(express.static(path.resolve(__dirname, 'app/build')));
 console.log(path.resolve(__dirname, 'app/build')); 
 
-app.get('/check', function (req, ress) {
+app.get('/table', function (req, ress) {
 
-    client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+    client.query('SELECT * from tblTable where isAvail = true;', (err, res) => {
         if (err) throw err;
         // for (let row of res.rows) {
            
