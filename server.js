@@ -10,7 +10,6 @@ const client = new Client({
 
 client.connect();
 
-
 app.use(express.static(path.resolve(__dirname, 'app/build')));
 console.log(path.resolve(__dirname, 'app/build'));
 
@@ -28,8 +27,8 @@ app.get('tables', function (req, res) {
     }
 });
 
-app.get('/test', function (req, res) {
-    res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
+app.get('/', function (req, res) {
+    res.send("oreder me");
 })
 
 app.listen(process.env.PORT || 3000, function () {
