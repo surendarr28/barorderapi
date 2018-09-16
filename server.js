@@ -40,7 +40,7 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
                 client.query(queryGetTableOrder, (err, tableResult) => {
                     if (err) return res.send("Some Error");
                     let data = {
-                        order: tableResult,
+                        order: tableResult.rows[0],
                         data: result.rows 
                     }
                     return res.send(data);
