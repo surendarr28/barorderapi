@@ -34,8 +34,18 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
         ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
         client.query(query, (err, result) => {
                 if (err) return res.send("Some Error");
-                return res.send(result.rows);
 
+                let queryGetTableOrder = "select * from tblordertablemapping"+
+                ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
+                client.query(queryGetTableOrder, (err, tableResult) => {
+                    if (err) return res.send("Some Error");
+                    let data = {
+                        order: tableResult,
+                        data: result.rows 
+                    }
+                    return res.send(data);
+    
+                });
             });
     } catch (e) {
         return res.send("Some Error");
