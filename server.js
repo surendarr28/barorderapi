@@ -8,18 +8,18 @@ const client = new Client({
     ssl: true,
 });
 
-client.connect();
+client.connect(); 
 
 
 app.use(express.static(path.resolve(__dirname, 'app/build')));
-console.log(path.resolve(__dirname, 'app/build'));
+console.log(path.resolve(__dirname, 'app/build')); 
 
-app.get('/check', function (req, res) {
+app.get('/check', function (req, ress) {
 
     client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
         if (err) throw err;
         for (let row of res.rows) {
-            res.send(row);
+            ress.send(row);
         }
         client.end();
     });
