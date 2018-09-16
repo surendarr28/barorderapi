@@ -27,6 +27,7 @@ app.get('/v1/api/tables', function (req, res) {
 
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
+        console.log(req.params.tableId);
         client.query('select item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
             'join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
             'join tblitem as item on item.id = oim.item_id' +
