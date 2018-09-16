@@ -30,7 +30,7 @@ app.get("/env", (req, res) => {
     res.send(process.env);
 })
 
-app.get('/', function (req, res) {
+app.get('/test', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
 })
 
