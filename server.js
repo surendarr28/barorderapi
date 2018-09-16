@@ -16,7 +16,7 @@ console.log(path.resolve(__dirname, 'app/build'));
 app.get('/v1/api/tables', function (req, res) {
     try {
         client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
-            if (err) return res.send("Some Error");
+            if (err) return res.send(err);
             return res.send(result.rows);
 
         });
@@ -27,11 +27,11 @@ app.get('/v1/api/tables', function (req, res) {
 
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
-        client.query('select item."name", oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
+        client.query('select item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
             'join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
             'join tblitem as item on item.id = oim.item_id' +
             'where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1', (err, result) => {
-                if (err) return res.send("Some Error");
+                if (err) return res.send(err);
                 return res.send(result.rows);
 
             });
