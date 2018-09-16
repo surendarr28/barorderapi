@@ -11,7 +11,7 @@ const client = new Client({
 client.connect();
 
 
-app.get('v1/api/tables', function (req, res) {
+app.get('/v1/api/tables', function (req, res) {
     try {
         client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
             if (err) return res.send("Some Error");;
