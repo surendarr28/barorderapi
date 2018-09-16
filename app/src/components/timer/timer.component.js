@@ -4,6 +4,7 @@ import './timer.component.css';
 
 import { MrriageTimer, BirthInitTimer, BirthTimer } from '../../actions/timerAction'
 
+
 class Timer extends Component {
 
     componentDidMount = () => {
@@ -16,33 +17,33 @@ class Timer extends Component {
             case "birth":
                 this.props.showBirthTimer();
         }
-        let marrageElm = document.getElementById(this.props.type);
-        console.log(marrageElm);
+        // let marrageElm = document.getElementById(this.props.type);
+        // console.log(marrageElm);
 
-        marrageElm.addEventListener("mouseover", e => {
-            dollChange();
-            console.log("dd")
-        });
+        // marrageElm.addEventListener("mouseover", e => {
+        //     dollChange();
+        //     console.log("dd")
+        // });
 
-        let dollChange = () => {
-            console.log(document.getElementById("box1"));
-            //doll.style.top = "85%";
-            // document.getElementById("box1").style.left = Math.floor(Math.random() * 700) + 300+"px";
-            // document.getElementById("box2").style.left = Math.floor(Math.random() * 700) + 300+"px";
-            // document.getElementById("box3").style.left = Math.floor(Math.random() * 700) + 300+"px";
-            // document.getElementById("box4").style.left = Math.floor(Math.random() * 700) + 300+"px";
-            // document.getElementById("box5").style.left = Math.floor(Math.random() * 700) + 300+"px";
+        // let dollChange = () => {
+        //     console.log(document.getElementById("box1"));
+        //     //doll.style.top = "85%";
+        //     // document.getElementById("box1").style.left = Math.floor(Math.random() * 700) + 300+"px";
+        //     // document.getElementById("box2").style.left = Math.floor(Math.random() * 700) + 300+"px";
+        //     // document.getElementById("box3").style.left = Math.floor(Math.random() * 700) + 300+"px";
+        //     // document.getElementById("box4").style.left = Math.floor(Math.random() * 700) + 300+"px";
+        //     // document.getElementById("box5").style.left = Math.floor(Math.random() * 700) + 300+"px";
 
-            for (var i = 1; i <= 5; i++) {
-                document.getElementById("box" + i).style.bottom = Math.floor(Math.random() * 250) + 200 + "px";
-                document.getElementById("box" + i).style.width = "100px";
-                document.getElementById("box" + i).style.height = "100px";
-                document.getElementById("box" + i).style.backgroundColor = "#E91E63";
-                document.getElementById("box" + i).style.zIndex = 1;
-                document.getElementById("box" + i).style.left = Math.floor(Math.random() * 700) + 300 + "px";
-                document.getElementById("box" + i).style.transform = "translate(-50%, -50%) rotate(" + Math.floor(Math.random() * -10) + 10 + "deg)";
-            }
-        }
+        //     for (var i = 1; i <= 5; i++) {
+        //         document.getElementById("box" + i).style.bottom = Math.floor(Math.random() * 250) + 200 + "px";
+        //         document.getElementById("box" + i).style.width = "100px";
+        //         document.getElementById("box" + i).style.height = "100px";
+        //         document.getElementById("box" + i).style.backgroundColor = "#E91E63";
+        //         document.getElementById("box" + i).style.zIndex = 1;
+        //         document.getElementById("box" + i).style.left = Math.floor(Math.random() * 700) + 300 + "px";
+        //         document.getElementById("box" + i).style.transform = "translate(-50%, -50%) rotate(" + Math.floor(Math.random() * -10) + 10 + "deg)";
+        //     }
+        // }
     }
 
     render() {

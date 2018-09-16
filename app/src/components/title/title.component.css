@@ -15,3 +15,23 @@
     position: relative;
     transition: 2s all;
 }
+
+.heart-img {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.heart-img, path {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    animation: brush 5s linear alternate infinite;
+}
+
+@keyframes brush {
+    from {
+        stroke-dashoffset: 1000;
+      }
+      to {
+        stroke-dashoffset: 0;
+      }
+}
