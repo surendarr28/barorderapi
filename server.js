@@ -36,7 +36,7 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
                 if (err) return res.send("Some Error");
 
                 let queryGetTableOrder = "select * from tblordertablemapping"+
-                ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
+                ' where table_id = ' + req.params.tableId + ' and orderstatus = 1';
                 client.query(queryGetTableOrder, (err, tableResult) => {
                     if (err) return res.send("Some Error");
                     let data = {
