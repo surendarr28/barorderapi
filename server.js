@@ -28,7 +28,7 @@ app.get('/v1/api/tables', function (req, res) {
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
         console.log(req.params.tableId);
-        let query = 'select item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
+        let query = 'select otm.order_id, item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
         ' join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
         ' join tblitem as item on item.id = oim.item_id' +
         ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
@@ -48,7 +48,14 @@ app.get('/v1/api/createorder', function (req, res) {
         let query = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
         client.query(query, (err, result) => {
                 if (err) return res.send("Some Error");
-                return res.send(result);
+                return res.send(result.rows);
+                // let queryOrderTableMapping = 
+                // client.query(query, (err, result) => {
+                //     if (err) return res.send("Some Error");
+                    
+    
+                // });
+                
 
             });
     } catch (e) {
