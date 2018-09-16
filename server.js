@@ -8,28 +8,25 @@ const client = new Client({
     ssl: true,
 });
 
-client.connect(); 
+client.connect();
 
 
 app.use(express.static(path.resolve(__dirname, 'app/build')));
-console.log(path.resolve(__dirname, 'app/build')); 
+console.log(path.resolve(__dirname, 'app/build'));
 
-app.get('/table', function (req, ress) {
+app.use("v1/api");
 
-    client.query('SELECT * from tblTable where isAvail = true;', (err, res) => {
-        if (err) throw err;
-        // for (let row of res.rows) {
-           
-        // }
-        return ress.send(res.rows);
-        client.end();
-    });
-
+app.get('tables', function (req, res) {
+    try {
+        client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
+            if (err) return res.send("Some Error");;
+            res.send(result.rows);
+            return client.end();
+        });
+    } catch (e) {
+        return res.send("Some Error");
+    }
 });
-
-app.get("/env", (req, res) => {
-    res.send(process.env);
-})
 
 app.get('/test', function (req, res) {
     res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
