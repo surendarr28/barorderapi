@@ -1,7 +1,6 @@
 var express = require('express')
 var path = require('path');
 var app = express();
-var router = express.Router();
 const { Client } = require('pg');
 
 const client = new Client({
@@ -10,14 +9,9 @@ const client = new Client({
 });
 
 client.connect();
-app.use('/api/v1/', router);
 
-// app.use(express.static(path.resolve(__dirname, 'app/build')));
-// console.log(path.resolve(__dirname, 'app/build'));
 
-// app.use("v1/api");
-
-router.get('tables', function (req, res) {
+app.get('v1/api/tables', function (req, res) {
     try {
         client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
             if (err) return res.send("Some Error");;
@@ -29,7 +23,7 @@ router.get('tables', function (req, res) {
     }
 });
 
-router.get('/', function (req, res) {
+app.get('/', function (req, res) {
     res.send("oreder me");
 })
 
