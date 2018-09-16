@@ -25,6 +25,19 @@ app.get('/v1/api/tables', function (req, res) {
     }
 });
 
+
+app.get('/v1/api/search/:key', function (req, res) {
+    try {
+        let query = "select * from tblitem where item_id LIKE '%"+req.params.tableId+"%' OR LOWER('name') LIKE '"+req.params.tableId+"%'"
+        client.query(query, (err, result) => {
+            if (err) return res.send("Some Error");
+            return res.send(result.rows);
+        });
+    } catch (e) {
+        return res.send("Some Error");
+    }
+});
+
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
         console.log(req.params.tableId);
