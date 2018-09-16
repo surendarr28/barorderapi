@@ -46,12 +46,12 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
                         if (err) return res.send("Some Error");
 
                         let ordertablemapquery = 'insert into tblordertablemapping (order_id, orderstatus, table_id) ' +
-                            'values(' + orderResult.row[0].orderid + ', 1, ' + req.params.tableId + ')';
+                            'values(' + orderResult.rows[0].orderid + ', 1, ' + req.params.tableId + ')';
                         client.query(ordertablemapquery, (err, ordertableMapResult) => {
                             if (err) return res.send("Some Error");
 
                             let data = {
-                                order: orderResult.row[0].orderid,
+                                order: orderResult.rows[0].orderid,
                                 data: result.rows
                             }
                             return res.send(data);
