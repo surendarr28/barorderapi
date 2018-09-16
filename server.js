@@ -16,7 +16,7 @@ console.log(path.resolve(__dirname, 'app/build'));
 app.get('/v1/api/tables', function (req, res) {
     try {
         client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
-            if (err) return res.send(err);
+            if (err) return res.send("Some Error");
             return res.send(result.rows);
 
         });
@@ -33,8 +33,22 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
         ' join tblitem as item on item.id = oim.item_id' +
         ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
         client.query(query, (err, result) => {
-                if (err) return res.send(query);
+                if (err) return res.send("Some Error");
                 return res.send(result.rows);
+
+            });
+    } catch (e) {
+        return res.send("Some Error");
+    }
+});
+
+app.get('/v1/api/createorder', function (req, res) {
+    try {
+        console.log(req.params.tableId);
+        let query = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
+        client.query(query, (err, result) => {
+                if (err) return res.send("Some Error");
+                return res.send(result);
 
             });
     } catch (e) {
