@@ -28,10 +28,42 @@ app.get('/v1/api/tables', function (req, res) {
 
 app.get('/v1/api/search/:key', function (req, res) {
     try {
-        let query = "select * from tblitem where item_id LIKE '%"+req.params.tableId+"%' OR LOWER('name') LIKE '"+req.params.tableId+"%'"
+        let query = "select * from tblitem where item_id LIKE '%" + req.params.tableId + "%' OR LOWER('name') LIKE '" + req.params.tableId + "%'"
         client.query(query, (err, result) => {
             if (err) return res.send("Some Error");
             return res.send(result.rows);
+        });
+    } catch (e) {
+        return res.send("Some Error");
+    }
+});
+
+app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
+    try {
+        if (!req.params.quantity)
+            return res.send("Quantity is Manditory");
+        let query = "select * from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+        client.query(query, (err, result) => {
+            if (err) return res.send("Some Error");
+
+            if (req.params.quantity == 0 && result.rows.length == 0) {
+                return res.send("deleted");
+            } else if (req.params.quantity == 0) {
+                let deletequery = "delete from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                client.query(deletequery, (err, result) => {
+                    return res.send("deleted");
+                });
+            } else if (req.params.quantity != 0 && result.rows.length > 0) {
+                let updatequery = "update tblorederitemmapping set quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                client.query(updatequery, (err, result) => {
+                    return res.send("updated");
+                });
+            } else if (result.rows.length == 0) {
+                let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ") set quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                client.query(insertquery, (err, result) => {
+                    return res.send("inserted");
+                });
+            }
         });
     } catch (e) {
         return res.send("Some Error");
