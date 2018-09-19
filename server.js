@@ -1,7 +1,10 @@
-var express = require('express')
+var express = require('express');
 var path = require('path');
+var cors = require('cors');
 var app = express();
 const { Client } = require('pg');
+
+app.use(cors());
 
 const client = new Client({
     connectionString: process.env.DATABASE_URL,
@@ -139,8 +142,12 @@ app.get('/v1/api/createorder', function (req, res) {
     }
 });
 
+app.use(express.static(path.resolve(__dirname, 'app/build')));
+console.log(path.resolve(__dirname, 'app/build'));
+
+
 app.get('/', function (req, res) {
-    res.send("oreder me");
+    res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
 })
 
 app.listen(process.env.PORT || 3000, function () {
