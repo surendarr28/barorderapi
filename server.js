@@ -43,9 +43,10 @@ app.get('/v1/api/search/:key', function (req, res) {
 
 app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
     try {
-        if (!req.params.quantity)
+        if (req.params.quantity === null)
             return res.send("Quantity is Manditory");
         let query = "select * from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+        console.log(query);
         client.query(query, (err, result) => {
             if (err) return res.send("Some Error");
 
@@ -53,16 +54,19 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
                 return res.send("deleted");
             } else if (req.params.quantity == 0) {
                 let deletequery = "delete from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                console.log(deletequery);
                 client.query(deletequery, (err, result) => {
                     return res.send("deleted");
                 });
             } else if (req.params.quantity != 0 && result.rows.length > 0) {
                 let updatequery = "update tblorederitemmapping set quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                console.log(updatequery);
                 client.query(updatequery, (err, result) => {
                     return res.send("updated");
                 });
             } else if (result.rows.length == 0) {
-                let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ") where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ")";
+                console.log(insertquery);
                 client.query(insertquery, (err, result) => {
                     return res.send("inserted");
                 });
@@ -76,25 +80,29 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
         console.log(req.params.tableId);
-        let query = 'select otm.order_id, item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
+        let query = 'select otm.order_id, item.id, item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
             ' join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
             ' join tblitem as item on item.id = oim.item_id' +
             ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
+            console.log(query);
         client.query(query, (err, result) => {
             if (err) return res.send("Some Error");
 
             let queryGetTableOrder = "select * from tblordertablemapping" +
                 ' where table_id = ' + req.params.tableId + ' and orderstatus = 1';
+                console.log(queryGetTableOrder);
             client.query(queryGetTableOrder, (err, tableResult) => {
                 if (err) return res.send("Some Error");
 
                 if (tableResult.rows.length === 0) {
                     let orderQuery = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
+                    console.log(orderQuery);
                     client.query(orderQuery, (err, orderResult) => {
                         if (err) return res.send("Some Error");
 
                         let ordertablemapquery = 'insert into tblordertablemapping (order_id, orderstatus, table_id) ' +
                             'values(' + orderResult.rows[0].orderid + ', 1, ' + req.params.tableId + ')';
+                            console.log(ordertablemapquery);
                         client.query(ordertablemapquery, (err, ordertableMapResult) => {
                             if (err) return res.send("Some Error");
 
