@@ -31,7 +31,7 @@ app.get('/v1/api/tables', function (req, res) {
 
 app.get('/v1/api/search/:key', function (req, res) {
     try {
-        let query = `select * from tblitem where item_id LIKE '%${req.params.key}%' OR LOWER("name") LIKE '${req.params.key}%'`
+        let query = `select * from tblitem where item_id LIKE '%${req.params.key}%' OR LOWER("name") LIKE '%${req.params.key}%'`
         client.query(query, (err, result) => {
             if (err) return res.send("Some Error");
             return res.send(result.rows);
