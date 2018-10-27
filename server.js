@@ -62,7 +62,7 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
                     return res.send("updated");
                 });
             } else if (result.rows.length == 0) {
-                let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ") set quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ") where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 client.query(insertquery, (err, result) => {
                     return res.send("inserted");
                 });
