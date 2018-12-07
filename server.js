@@ -55,7 +55,8 @@ app.get('/v1/api/updateitem/:orderid/:itemid/:status', function (req, res) {
         let updatequery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
         console.log(updatequery);
         client.query(updatequery, (err, result) => {
-            return res.send({response:"updated item status"});
+            let ress = {response:"updated item status"};
+            return res.send(ress);
         });
     } catch (e) {
         return res.send("Some Error");
