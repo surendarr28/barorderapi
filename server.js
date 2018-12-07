@@ -162,7 +162,7 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
  */
 app.get('/v1/api/updateorder/:orderid/:status', function (req, res) {
     try {
-        let updatequery = "update tblorder set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + "";
+        let updatequery = "update tblorder set orderstatus = " + req.params.status + " where orderid = " + req.params.orderid + "";
         console.log(updatequery);
         client.query(updatequery, (err, result) => {
             return res.send({response:"updated order status"});
