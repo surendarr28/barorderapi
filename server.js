@@ -50,7 +50,7 @@ app.get('/v1/api/search/:key', function (req, res) {
 /**
  * status of item 0=kitchen, 1=readytotable, 2=intable, 3=bill
  */
-app.get('/v1/api/additem/:orderid/:itemid/:status', function (req, res) {
+app.get('/v1/api/updateitem/:orderid/:itemid/:status', function (req, res) {
     let updatequery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
     console.log(updatequery);
     client.query(updatequery, (err, result) => {
