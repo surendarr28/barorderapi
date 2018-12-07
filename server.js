@@ -160,9 +160,9 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
 /**
  * status of item 0=kitchen, 1=readytotable, 2=intable, 3=bill
  */
-app.get('/v1/api/updateorder/:orderid/:status', function (req, res) {
+app.get('/v1/api/updateorder/:orderid/:tableid/:status', function (req, res) {
     try {
-        let updatequery = "update tblorder set orderstatus = " + req.params.status + " where orderid = " + req.params.orderid + "";
+        let updatequery = "update tblordertablemapping set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
         console.log(updatequery);
         client.query(updatequery, (err, result) => {
             return res.send({response:"updated order status"});
