@@ -16,6 +16,9 @@ client.connect();
 // app.use(express.static(path.resolve(__dirname, 'app/build')));
 // console.log(path.resolve(__dirname, 'app/build'));
 
+/**
+ * GET TABLE API
+ */
 app.get('/v1/api/tables', function (req, res) {
     try {
         client.query('SELECT * from tblTable where isAvail = true;', (err, result) => {
@@ -24,16 +27,18 @@ app.get('/v1/api/tables', function (req, res) {
 
         });
     } catch (e) {
-        return res.send("Some Error");
+        return res.send("Some Error on getting tables");
     }
 });
 
-
+/**
+ * Search API
+ */
 app.get('/v1/api/search/:key', function (req, res) {
     try {
         let query = `select * from tblitem where item_id LIKE '%${req.params.key}%' OR LOWER("name") LIKE '%${req.params.key}%'`
         client.query(query, (err, result) => {
-            if (err) return res.send("Some Error");
+            if (err) return res.send("Some Error on searching item");
             return res.send(result.rows);
         });
     } catch (e) {
@@ -41,6 +46,21 @@ app.get('/v1/api/search/:key', function (req, res) {
     }
 });
 
+
+/**
+ * status of item 0=kitchen, 1=readytotable, 2=intable, 3=bill
+ */
+app.get('/v1/api/additem/:orderid/:itemid/:status', function (req, res) {
+    let updatequery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+    console.log(updatequery);
+    client.query(updatequery, (err, result) => {
+        return res.send("updated item status");
+    });
+});
+
+/**
+ * add item in table
+ */
 app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
     try {
         if (req.params.quantity === null)
@@ -48,10 +68,10 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
         let query = "select * from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
         console.log(query);
         client.query(query, (err, result) => {
-            if (err) return res.send("Some Error");
+            if (err) return res.send("Some Error on seleting order item mapping");
 
             if (req.params.quantity == 0 && result.rows.length == 0) {
-                return res.send("deleted");
+                return res.send("no data to delete");
             } else if (req.params.quantity == 0) {
                 let deletequery = "delete from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(deletequery);
@@ -59,7 +79,7 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
                     return res.send("deleted");
                 });
             } else if (req.params.quantity != 0 && result.rows.length > 0) {
-                let updatequery = "update tblorederitemmapping set quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                let updatequery = "update tblorederitemmapping set status = 0, quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(updatequery);
                 client.query(updatequery, (err, result) => {
                     return res.send("updated");
@@ -77,6 +97,9 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
     }
 });
 
+/**
+ * get table order or create order.
+ */
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
         console.log(req.params.tableId);
@@ -84,27 +107,27 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
             ' join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
             ' join tblitem as item on item.id = oim.item_id' +
             ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1';
-            console.log(query);
+        console.log(query);
         client.query(query, (err, result) => {
-            if (err) return res.send("Some Error");
+            if (err) return res.send("Some Error on seleting order");
 
             let queryGetTableOrder = "select * from tblordertablemapping" +
                 ' where table_id = ' + req.params.tableId + ' and orderstatus = 1';
-                console.log(queryGetTableOrder);
+            console.log(queryGetTableOrder);
             client.query(queryGetTableOrder, (err, tableResult) => {
-                if (err) return res.send("Some Error");
+                if (err) return res.send("Some Error on order table mapping");
 
                 if (tableResult.rows.length === 0) {
                     let orderQuery = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
                     console.log(orderQuery);
                     client.query(orderQuery, (err, orderResult) => {
-                        if (err) return res.send("Some Error");
+                        if (err) return res.send("Some Error on adding to order");
 
                         let ordertablemapquery = 'insert into tblordertablemapping (order_id, orderstatus, table_id) ' +
                             'values(' + orderResult.rows[0].orderid + ', 1, ' + req.params.tableId + ')';
-                            console.log(ordertablemapquery);
+                        console.log(ordertablemapquery);
                         client.query(ordertablemapquery, (err, ordertableMapResult) => {
-                            if (err) return res.send("Some Error");
+                            if (err) return res.send("Some Error on order item mapping");
 
                             let data = {
                                 order: orderResult.rows[0].orderid,
@@ -129,33 +152,44 @@ app.get('/v1/api/tables/:tableId', function (req, res) {
     }
 });
 
-app.get('/v1/api/createorder', function (req, res) {
-    try {
-        console.log(req.params.tableId);
-        let query = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
-        client.query(query, (err, result) => {
-            if (err) return res.send("Some Error");
-            return res.send(result.rows);
-            // let queryOrderTableMapping = 
-            // client.query(query, (err, result) => {
-            //     if (err) return res.send("Some Error");
-
-
-            // });
-
-
-        });
-    } catch (e) {
-        return res.send("Some Error");
-    }
+/**
+ * status of item 0=kitchen, 1=readytotable, 2=intable, 3=bill
+ */
+app.get('/v1/api/updateorder/:orderid/:status', function (req, res) {
+    let updatequery = "update tblorder set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + "";
+    console.log(updatequery);
+    client.query(updatequery, (err, result) => {
+        return res.send("updated order status");
+    });
 });
+
+// app.get('/v1/api/createorder', function (req, res) {
+//     try {
+//         console.log(req.params.tableId);
+//         let query = 'insert into tblorder (orderstatus) values(1) RETURNING orderid';
+//         client.query(query, (err, result) => {
+//             if (err) return res.send("Some Error");
+//             return res.send(result.rows);
+//             // let queryOrderTableMapping = 
+//             // client.query(query, (err, result) => {
+//             //     if (err) return res.send("Some Error");
+
+
+//             // });
+
+
+//         });
+//     } catch (e) {
+//         return res.send("Some Error");
+//     }
+// });
 
 // app.use(express.static(path.resolve(__dirname, 'app/build')));
 // console.log(path.resolve(__dirname, 'app/build'));
 
 
 app.get('/', function (req, res) {
-   // res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
+    // res.sendFile(path.resolve(__dirname, 'app/build/index.html'));
 })
 
 app.listen(process.env.PORT || 3000, function () {
