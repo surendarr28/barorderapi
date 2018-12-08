@@ -111,7 +111,7 @@ app.get('/v1/api/orders', function (req, res) {
         ' JOIN tblorederitemmapping as oimapp on oimapp.order_id = otmapp.order_id ' +
         ' JOIN tbltable as tb on tb.id = otmapp.table_id ' +
         ' JOIN tblitem as it on it.id = oimapp.item_id ' +
-        ' where orderstatus = 1 ORDER BY otmapp.created_at ASC, oimapp.created_at ASC ';
+        ' where orderstatus = 1 and oimapp.status = 0  ORDER BY otmapp.created_at ASC, oimapp.created_at ASC ';
 
     client.query(query, (err, result) => {
         if (err) return res.send("Some Error on kitchen order");
