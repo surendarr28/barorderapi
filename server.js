@@ -103,6 +103,26 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
 });
 
 /**
+ * kitchen order
+ */
+app.get('/v1/api/orders', function(req, res){
+    let query = 'select otmapp.order_id, otmapp.orderstatus, otmapp.table_id, it.id, it.item_id, it.name, tb.title, oimapp.status, oimapp.quantity  from tblordertablemapping as otmapp '+
+    ' JOIN tblorederitemmapping as oimapp on oimapp.order_id = otmapp.order_id '+
+    ' JOIN tbltable as tb on tb.id = otmapp.table_id '+
+    ' JOIN tblitem as it on it.id = oimapp.item_id '+
+    ' where orderstatus = 1 ORDER BY otmapp.created_at ASC, oimapp.created_at ASC ';
+
+    client.query(query, (err, result) => {
+        if (err) return res.send("Some Error on kitchen order");
+
+        let data = {
+            data: result.rows
+        }
+        return res.send(data);
+    });
+})
+
+/**
  * get table order or create order.
  */
 app.get('/v1/api/tables/:tableId', function (req, res) {
