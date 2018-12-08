@@ -131,11 +131,11 @@ app.get('/v1/api/orders/:orderid/:tableid/:status/:orderstatus', function (req, 
         let updateItemQuery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + "";
         console.log(updateItemQuery);
         client.query(updateItemQuery, (err, result) => {
-            let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.orderstatus + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
-            console.log(updateOrderQuery);
-            client.query(updateOrderQuery, (err, result) => {
+            // let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.orderstatus + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
+            // console.log(updateOrderQuery);
+            // client.query(updateOrderQuery, (err, result) => {
                 return res.send({ response: "updated order status" });
-            });
+            // });
         });
     } catch (e) {
         return res.send("Some Error");
