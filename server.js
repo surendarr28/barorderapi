@@ -3,6 +3,7 @@ var path = require('path');
 var cors = require('cors');
 var app = express();
 const { Client } = require('pg');
+var _ = require('lodash');
 
 app.use(cors());
 
@@ -116,7 +117,7 @@ app.get('/v1/api/orders', function(req, res){
         if (err) return res.send("Some Error on kitchen order");
 
         let data = {
-            data: result.rows
+            data: _.groupBy(result.rows, 'order_id' )
         }
         return res.send(data);
     });

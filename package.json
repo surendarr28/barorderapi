@@ -20,6 +20,7 @@
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.3",
+    "lodash": "^4.17.11",
     "mo-js": "^0.288.2",
     "pg": "^7.4.3",
     "react-redux": "^5.0.7",
