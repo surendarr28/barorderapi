@@ -85,7 +85,8 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
                     return res.send({ response: "deleted" });
                 });
             } else if (req.params.quantity != 0 && result.rows.length > 0) {
-                let updatequery = "update tblorederitemmapping set status = 0, quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
+                let quantity = result.rows[0].quantity + parseInt(req.params.quantity);
+                let updatequery = "update tblorederitemmapping set status = 0, quantity = " + quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(updatequery);
                 client.query(updatequery, (err, result) => {
                     return res.send({ response: "updated" });
@@ -134,7 +135,7 @@ app.get('/v1/api/orders/:orderid/:tableid/:status/:orderstatus', function (req, 
             // let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.orderstatus + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
             // console.log(updateOrderQuery);
             // client.query(updateOrderQuery, (err, result) => {
-                return res.send({ response: "updated order status" });
+            return res.send({ response: "updated order status" });
             // });
         });
     } catch (e) {
