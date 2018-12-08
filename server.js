@@ -85,7 +85,7 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
                     return res.send({ response: "deleted" });
                 });
             } else if (req.params.quantity != 0 && result.rows.length > 0) {
-                let quantity = result.rows[0].quantity + parseInt(req.params.quantity);
+                let quantity = parseInt(result.rows[0].quantity) + parseInt(req.params.quantity);
                 let updatequery = "update tblorederitemmapping set status = 0, quantity = " + quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(updatequery);
                 client.query(updatequery, (err, result) => {
