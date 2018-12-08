@@ -126,7 +126,7 @@ app.get('/v1/api/orders', function (req, res) {
 /**
  * kitchen update order and all item of order
  */
-app.get('/v1/api/orders/:orderid/:status/:orderstatus', function (req, res) {
+app.get('/v1/api/orders/:orderid/:tableid/:status/:orderstatus', function (req, res) {
     try {
         let updateItemQuery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + "";
         console.log(updateItemQuery);
