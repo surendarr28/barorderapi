@@ -126,12 +126,12 @@ app.get('/v1/api/orders', function (req, res) {
 /**
  * kitchen update order and all item of order
  */
-app.get('/v1/api/orders/:orderid/:status', function (req, res) {
+app.get('/v1/api/orders/:orderid/:status/:orderstatus', function (req, res) {
     try {
         let updateItemQuery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + "";
         console.log(updateItemQuery);
         client.query(updateItemQuery, (err, result) => {
-            let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
+            let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.orderstatus + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
             console.log(updateOrderQuery);
             client.query(updateOrderQuery, (err, result) => {
                 return res.send({ response: "updated order status" });
