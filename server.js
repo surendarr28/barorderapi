@@ -56,7 +56,7 @@ app.get('/v1/api/updateitem/:orderid/:itemid/:status', function (req, res) {
         let updatequery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
         console.log(updatequery);
         client.query(updatequery, (err, result) => {
-            let ress = {response:"updated item status"};
+            let ress = { response: "updated item status" };
             return res.send(ress);
         });
     } catch (e) {
@@ -77,24 +77,24 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
             if (err) return res.send("Some Error on seleting order item mapping");
 
             if (req.params.quantity == 0 && result.rows.length == 0) {
-                return res.send({response:"no data to delete"});
+                return res.send({ response: "no data to delete" });
             } else if (req.params.quantity == 0) {
                 let deletequery = "delete from tblorederitemmapping where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(deletequery);
                 client.query(deletequery, (err, result) => {
-                    return res.send({response:"deleted"});
+                    return res.send({ response: "deleted" });
                 });
             } else if (req.params.quantity != 0 && result.rows.length > 0) {
                 let updatequery = "update tblorederitemmapping set status = 0, quantity = " + req.params.quantity + "  where order_id = " + req.params.orderid + " AND item_id = " + req.params.itemid + "";
                 console.log(updatequery);
                 client.query(updatequery, (err, result) => {
-                    return res.send({response:"updated"});
+                    return res.send({ response: "updated" });
                 });
             } else if (result.rows.length == 0) {
                 let insertquery = "insert into tblorederitemmapping (order_id,item_id,quantity) values(" + req.params.orderid + "," + req.params.itemid + "," + req.params.quantity + ")";
                 console.log(insertquery);
                 client.query(insertquery, (err, result) => {
-                    return res.send({response:"inserted"});
+                    return res.send({ response: "inserted" });
                 });
             }
         });
@@ -106,21 +106,40 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
 /**
  * kitchen order
  */
-app.get('/v1/api/orders', function(req, res){
-    let query = 'select otmapp.order_id, otmapp.orderstatus, otmapp.table_id, it.id, it.item_id, it.name, tb.title, oimapp.status, oimapp.quantity  from tblordertablemapping as otmapp '+
-    ' JOIN tblorederitemmapping as oimapp on oimapp.order_id = otmapp.order_id '+
-    ' JOIN tbltable as tb on tb.id = otmapp.table_id '+
-    ' JOIN tblitem as it on it.id = oimapp.item_id '+
-    ' where orderstatus = 1 ORDER BY otmapp.created_at ASC, oimapp.created_at ASC ';
+app.get('/v1/api/orders', function (req, res) {
+    let query = 'select otmapp.order_id, otmapp.orderstatus, otmapp.table_id, it.id, it.item_id, it.name, tb.title, oimapp.status, oimapp.quantity  from tblordertablemapping as otmapp ' +
+        ' JOIN tblorederitemmapping as oimapp on oimapp.order_id = otmapp.order_id ' +
+        ' JOIN tbltable as tb on tb.id = otmapp.table_id ' +
+        ' JOIN tblitem as it on it.id = oimapp.item_id ' +
+        ' where orderstatus = 1 ORDER BY otmapp.created_at ASC, oimapp.created_at ASC ';
 
     client.query(query, (err, result) => {
         if (err) return res.send("Some Error on kitchen order");
 
         let data = {
-            data: _.groupBy(result.rows, 'order_id' )
+            data: _.groupBy(result.rows, 'order_id')
         }
         return res.send(data);
     });
+})
+
+/**
+ * kitchen update order and all item of order
+ */
+app.get('/v1/api/orders/:orderid/:status', function (req, res) {
+    try {
+        let updateItemQuery = "update tblorederitemmapping set status = " + req.params.status + " where order_id = " + req.params.orderid + "";
+        console.log(updateItemQuery);
+        client.query(updateItemQuery, (err, result) => {
+            let updateOrderQuery = "update tblordertablemapping set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
+            console.log(updateOrderQuery);
+            client.query(updateOrderQuery, (err, result) => {
+                return res.send({ response: "updated order status" });
+            });
+        });
+    } catch (e) {
+        return res.send("Some Error");
+    }
 })
 
 /**
@@ -186,7 +205,7 @@ app.get('/v1/api/updateorder/:orderid/:tableid/:status', function (req, res) {
         let updatequery = "update tblordertablemapping set orderstatus = " + req.params.status + " where order_id = " + req.params.orderid + " and table_id = " + req.params.tableid + "";
         console.log(updatequery);
         client.query(updatequery, (err, result) => {
-            return res.send({response:"updated order status"});
+            return res.send({ response: "updated order status" });
         });
     } catch (e) {
         return res.send("Some Error");
