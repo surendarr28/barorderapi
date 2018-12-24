@@ -108,7 +108,7 @@ app.get('/v1/api/additem/:orderid/:itemid/:quantity', function (req, res) {
  * kitchen order
  */
 app.get('/v1/api/orders', function (req, res) {
-    let query = 'select otmapp.order_id, otmapp.orderstatus, otmapp.table_id, it.id, it.item_id, it.name, tb.title, oimapp.status, oimapp.quantity, otmapp.created_at  from tblordertablemapping as otmapp ' +
+    let query = 'select otmapp.order_id, otmapp.orderstatus, otmapp.table_id, it.price, it.id, it.item_id, it.name, tb.title, oimapp.status, oimapp.quantity, otmapp.created_at  from tblordertablemapping as otmapp ' +
         ' JOIN tblorederitemmapping as oimapp on oimapp.order_id = otmapp.order_id ' +
         ' JOIN tbltable as tb on tb.id = otmapp.table_id ' +
         ' JOIN tblitem as it on it.id = oimapp.item_id ' +
@@ -149,7 +149,7 @@ app.get('/v1/api/orders/:orderid/:tableid/:status/:orderstatus', function (req, 
 app.get('/v1/api/tables/:tableId', function (req, res) {
     try {
         console.log(req.params.tableId);
-        let query = 'select otm.order_id, item.id, item.name, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
+        let query = 'select otm.order_id, item.id, item.name, item.price, oim.status, oim.quantity, oim.order_id, item.item_id from tblordertablemapping as otm' +
             ' join tblorederitemmapping as oim on oim.order_id = otm.order_id' +
             ' join tblitem as item on item.id = oim.item_id' +
             ' where otm.table_id = ' + req.params.tableId + ' and otm.orderstatus = 1 ORDER BY oim.created_at ASC NULLS LAST';
